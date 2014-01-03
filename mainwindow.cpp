@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->glWidget, SLOT(setOffsetX(double)));
     connect(ui->offsetYSpinBox, SIGNAL(valueChanged(double)),
             ui->glWidget, SLOT(setOffsetY(double)));
+    connect(ui->offsetZSpinBox, SIGNAL(valueChanged(double)),
+            ui->glWidget, SLOT(setOffsetZ(double)));
     connect(ui->chooseColorButton, SIGNAL(clicked()),
             this, SLOT(chooseColor()));
     connect(ui->frustumScaleSpinBox, SIGNAL(valueChanged(double)),

@@ -13,7 +13,7 @@ MyGlWidget::MyGlWidget(QWidget *parent) :
     vertexDataBuffer(QOpenGLBuffer::VertexBuffer),
     vertexDataBufferName("vertex"),
     indexDataBuffer(QOpenGLBuffer::IndexBuffer),
-    vertexOffset(0.0f, 0.0f),
+    vertexOffset(0.0f, 0.0f, 0.0f),
     triangleColor("#FFFFFF"),
     zNear(1.0f),
     zFar(3.0f),
@@ -39,6 +39,12 @@ void MyGlWidget::setOffsetX(double value)
 void MyGlWidget::setOffsetY(double value)
 {
     vertexOffset.setY(value);
+    updateGL();
+}
+
+void MyGlWidget::setOffsetZ(double value)
+{
+    vertexOffset.setZ(value);
     updateGL();
 }
 
@@ -82,10 +88,10 @@ void MyGlWidget::initializeGL()
 
     initializeProgram();
 
-    // Face Culling
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
+//    // Face Culling
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CW);
 
     // Enabling depth buffer
     glEnable(GL_DEPTH_TEST);
@@ -107,15 +113,15 @@ void MyGlWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    program.setUniformValue("perspectiveMatrix", perspectiveMatrix);
-    program.setUniformValue("vertexOffset", QVector2D(0.0f, 0.0f));
-    qDebug() << "GL Error1:" << static_cast<int>(glGetError());
-
     vertexArrayObject.bind();
-    qDebug() << "GL Error2:" << static_cast<int>(glGetError());
+    program.setUniformValue("perspectiveMatrix", perspectiveMatrix);
+    program.setUniformValue("vertexOffset", vertexOffset);
+//    qDebug() << "GL Error1:" << static_cast<int>(glGetError());
 
-    const GLsizei cube2VertexOffset = vertexData3Size / 2;
-    qDebug() << "GL Error3:" << static_cast<int>(glGetError());
+//    qDebug() << "GL Error2:" << static_cast<int>(glGetError());
+
+//    const GLsizei cube2VertexOffset = vertexData3Size / 2;
+//    qDebug() << "GL Error3:" << static_cast<int>(glGetError());
     glDrawElements(GL_TRIANGLES, indexData1Count, GL_UNSIGNED_SHORT, 0);
 //    glDrawElementsBaseVertex(GL_TRIANGLES, indexData1Count, GL_UNSIGNED_SHORT, 0, cube2VertexOffset);
 
@@ -217,18 +223,18 @@ void MyGlWidget::initializeProgram()
 
 void MyGlWidget::updatePerspectiveMatrix()
 {
-//    perspectiveMatrix.setRow(0, QVector4D(frustumScale, 0.0f, 0.0f, 0.0f));
-//    perspectiveMatrix.setRow(1, QVector4D(0.0f, frustumScale, 0.0f, 0.0f));
-//    perspectiveMatrix.setRow(2, QVector4D(0.0f, 0.0f, 1.0f, 0.0f));
-//    perspectiveMatrix.setRow(3, QVector4D(0.0f, 0.0f, 1.0f, 0.0f));
-
     perspectiveMatrix.setRow(0, QVector4D(frustumScale, 0.0f, 0.0f, 0.0f));
     perspectiveMatrix.setRow(1, QVector4D(0.0f, frustumScale, 0.0f, 0.0f));
-    perspectiveMatrix.setRow(2, QVector4D(0.0f,
-                                          0.0f,
-                                          ((zFar + zNear) / (zNear - zFar)),
-                                          ((2 * zFar * zNear) / (zNear - zFar))));
-    perspectiveMatrix.setRow(3, QVector4D(0.0f, 0.0f, -1.0f, 0.0f));
+    perspectiveMatrix.setRow(2, QVector4D(0.0f, 0.0f, 1.0f, 0.0f));
+    perspectiveMatrix.setRow(3, QVector4D(0.0f, 0.0f, 1.0f, 0.0f));
+
+//    perspectiveMatrix.setRow(0, QVector4D(frustumScale, 0.0f, 0.0f, 0.0f));
+//    perspectiveMatrix.setRow(1, QVector4D(0.0f, frustumScale, 0.0f, 0.0f));
+//    perspectiveMatrix.setRow(2, QVector4D(0.0f,
+//                                          0.0f,
+//                                          ((zFar + zNear) / (zNear - zFar)),
+//                                          ((2 * zFar * zNear) / (zNear - zFar))));
+//    perspectiveMatrix.setRow(3, QVector4D(0.0f, 0.0f, -1.0f, 0.0f));
 
     program.setUniformValue("perspectiveMatrix", perspectiveMatrix);
 }

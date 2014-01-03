@@ -26,6 +26,7 @@ public:
 public slots:
     void setOffsetX(double value);
     void setOffsetY(double value);
+    void setOffsetZ(double value);
     void setColor(QColor color);
     void setZNear(double value);
     void setZFar(double value);
@@ -58,7 +59,7 @@ private:
     const QByteArray vertexDataBufferName;
     QOpenGLBuffer indexDataBuffer;
 
-    QVector2D vertexOffset;
+    QVector3D vertexOffset;
     QColor triangleColor;
     QMatrix4x4 perspectiveMatrix;
     float zNear;
